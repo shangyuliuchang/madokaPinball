@@ -149,6 +149,12 @@ void Bullet::move()
                             obstacles[i].attack(10000, Bullet::bulletAccum[type]);
                         valid = false;
                     }
+                    if (i == BOSS_BUTAI)
+                    {
+                        if (type == EMIT_MODE_ARROW)
+                            obstacles[i].attack(10000, Bullet::bulletAccum[type]);
+                        valid = false;
+                    }
                 }
             }
         }

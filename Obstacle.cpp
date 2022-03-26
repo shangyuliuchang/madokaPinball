@@ -283,12 +283,22 @@ void createObs(int num)
     for (int i = 3; i < obsNum; i++)
         if (obstacles[i].valid)
             noValid = false;
-    if (noValid)
-    // if (noValid && score > 1000)
+    if (noValid && score > 1000)
     {
-        obstacles[BOSS_MONITOR] = Obstacle::texObs(width / 2 + (rand() % 200), height - 100, 3, 512, 0, 0.2f);
-        obstacles[BOSS_MONITOR].life = 2000;
+        if (game.state == BEFORE_BOSS_MONITOR)
+        {
+            obstacles[BOSS_MONITOR] = Obstacle::texObs(width / 2 + (rand() % 200), height - 100, 3, 512, 0, 0.2f);
+            obstacles[BOSS_MONITOR].life = 2000;
+            game.state = DURING_BOSS_MONITOR;
+        }
+        if (game.state == AFTER_BOSS_MONITOR)
+        {
+            obstacles[BOSS_BUTAI] = Obstacle::texObs(width / 2 + (rand() % 200), height - 100, 4, 512, 0, 0.2f);
+            obstacles[BOSS_BUTAI].life = 2000;
+            game.state = DURING_BOSS_BUTAI;
+        }
     }
+
     for (int i = 10; i < obsNum; i++)
     {
         if (obstacles[i].valid == false)
@@ -298,6 +308,20 @@ void createObs(int num)
             obstacleNum++;
             if (obstacleNum >= num)
                 break;
+        }
+    }
+    if (obstacles[BOSS_BUTAI].valid)
+    {
+        for (int i = 10; i < obsNum; i++)
+        {
+            if (obstacles[i].valid == false)
+            {
+                obstacles[i] = Obstacle::texObs(rand() % 100 + obstacles[BOSS_BUTAI].centerX / 2 - 50, rand() % 100 + obstacles[BOSS_BUTAI].centerY - 50, rand() % ObsNum, 100, rand() % 360, (rand() % 1000 + 3000) / 2000.0f);
+                obstacles[i].life = rand() % 10;
+                obstacleNum++;
+                if (obstacleNum >= 1)
+                    break;
+            }
         }
     }
 }
@@ -320,24 +344,27 @@ void clearObs()
 }
 void Obstacle::attack(int att, bool acc)
 {
-    if (life < 10000)
+    if (valid)
     {
-        if (life >= att)
+        if (life < 10000)
         {
-            life -= att;
-            score += att;
-            if (acc)
-                game.addAccum(att);
+            if (life >= att)
+            {
+                life -= att;
+                score += att;
+                if (acc)
+                    game.addAccum(att);
+            }
+            else
+            {
+                if (acc)
+                    game.addAccum(life);
+                score += life;
+                life = 0;
+            }
         }
-        else
-        {
-            if (acc)
-                game.addAccum(life);
-            score += life;
-            life = 0;
-        }
+        if (life <= 0)
+            valid = false;
     }
-    if (life <= 0)
-        valid = false;
 }
 Obstacle *obstacles;

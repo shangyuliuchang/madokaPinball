@@ -13,6 +13,13 @@
 #define EMIT_MODE_SPEAR 5
 
 #define BOSS_MONITOR 3
+#define BOSS_BUTAI 4
+
+#define BEFORE_BOSS_MONITOR 0
+#define DURING_BOSS_MONITOR 1
+#define AFTER_BOSS_MONITOR 2
+#define DURING_BOSS_BUTAI 3
+#define AFTER_BOSS_BUTAI 4
 
 class Game
 {
@@ -29,6 +36,7 @@ public:
     int accum = 0;
     int raise = 0;
     int emitWait = 0;
+    int state = BEFORE_BOSS_MONITOR;
     void inline addAccum(int n)
     {
         if (accum + n <= maxAccum)

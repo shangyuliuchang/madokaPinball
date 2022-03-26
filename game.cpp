@@ -4,7 +4,8 @@ Game game;
 void initGame(void)
 {
     score = 0;
-    game.accum = maxAccum;
+    game.accum = 0;
+    // game.accum = maxAccum;
     game.raise = 0;
     game.emitWait = 0;
     for (int i = 0; i < ballNum; i++)
@@ -27,6 +28,7 @@ void initGame(void)
     game.emit.emitMode = EMIT_MODE_QB;
     game.emit.emitState = EMIT_STATE_IDLE;
     game.emit.emitCnt = 0;
+    game.state = BEFORE_BOSS_MONITOR;
 }
 void *calc(void *arg)
 {
@@ -153,13 +155,13 @@ void *calc(void *arg)
                             if (obstacles[j].valid && !obstacles[j].fixed)
                             {
                                 exp = (height - obstacles[j].centerY) * 0.05f;
-                                if (obstacles[j].centerY < height - 100)
+                                if (obstacles[j].centerY < height - 100 && j != BOSS_MONITOR)
                                 {
                                     obstacles[j].centerY += 200;
                                     for (int i = 0; i < obstacles[j].points.size(); i++)
                                         obstacles[j].points[i].y += 200;
                                 }
-                                else
+                                else if (j != BOSS_MONITOR)
                                 {
                                     obstacles[j].centerY += 100;
                                     for (int i = 0; i < obstacles[j].points.size(); i++)
@@ -208,7 +210,7 @@ void *calc(void *arg)
         {
             for (int i = 0; i < obsNum; i++)
             {
-                if (obstacles[i].valid && !obstacles[i].fixed && i != BOSS_MONITOR)
+                if (obstacles[i].valid && !obstacles[i].fixed && i != BOSS_MONITOR && i != BOSS_BUTAI)
                 {
                     obstacles[i].phase++;
                     if (obstacles[i].phase >= obstacles[i].period)
@@ -219,6 +221,16 @@ void *calc(void *arg)
                     }
                 }
             }
+        }
+        if (game.state == DURING_BOSS_MONITOR && obstacles[BOSS_MONITOR].valid == false)
+        {
+            game.state = AFTER_BOSS_MONITOR;
+            Bullet::bulletNum[0] = 100;
+        }
+        if (game.state == DURING_BOSS_BUTAI && obstacles[BOSS_BUTAI].valid == false)
+        {
+            game.state = AFTER_BOSS_BUTAI;
+            Bullet::bulletNum[0] = 150;
         }
         Sleep(1);
     }

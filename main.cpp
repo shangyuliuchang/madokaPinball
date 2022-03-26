@@ -2,7 +2,7 @@
 
 int height = 1000;
 int width = 1000;
-int ballNum = 100;
+int ballNum = 200;
 int obsNum = 100;
 int animNum = 10;
 int obsPerLayer = 5;
@@ -218,7 +218,7 @@ void loadTex(void)
     //     sprintf(tmp, "witch%d.png", i);
     //     texNames.push_back(tmp);
     // }
-    texNames = vector<string>({"img/witch1.png", "img/witch2.png", "img/witch3.png", "img/monitor.png"});
+    texNames = vector<string>({"img/witch1.png", "img/witch2.png", "img/witch3.png", "img/monitor.png", "img/butai.png"});
     loadTex(texNames, ObsVertex, ObsRatio, ObsTex);
     texNames = vector<string>({"img/qb.png", "img/bomb.png", "img/mami.png", "img/madoka.png", "img/saber.png", "img/spear.png"});
     loadTex(texNames, ballVertex, ballRatio, ballTex);
