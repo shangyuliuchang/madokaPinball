@@ -21,6 +21,7 @@ Obstacle::Obstacle()
     centerX = centerY = 0;
     fixed = false;
     tex = 10000;
+    speed = 0.0f;
 }
 Obstacle::Obstacle(const vector<Point2f> &_points)
 {
@@ -39,8 +40,9 @@ Obstacle::Obstacle(const vector<Point2f> &_points)
     life = 1;
     fixed = false;
     tex = 10000;
+    speed = 1.0f;
 }
-Obstacle::Obstacle(const vector<Point2f> &_points, unsigned int _tex, float ratioX, float ratioY, float angle)
+Obstacle::Obstacle(const vector<Point2f> &_points, unsigned int _tex, float ratioX, float ratioY, float angle, float _speed)
 {
     points = _points;
     centerX = centerY = 0;
@@ -57,6 +59,7 @@ Obstacle::Obstacle(const vector<Point2f> &_points, unsigned int _tex, float rati
     life = 1;
     fixed = false;
     tex = _tex;
+    speed = _speed;
     period = rand() % 10 + 40;
     phase = rand() % period;
     dAngle = (float)(rand() % 10 + 10);
@@ -157,7 +160,7 @@ Obstacle Obstacle::poly(float x, float y, int n, float len, float angle)
     return Obstacle(p, 1, 0.01f);
     // return Obstacle(p);
 }
-Obstacle Obstacle::texObs(float x, float y, int n, float _len, float angle)
+Obstacle Obstacle::texObs(float x, float y, int n, float _len, float angle, float _speed)
 {
     vector<Point2f> p;
     // if (n == 1)
@@ -199,10 +202,10 @@ Obstacle Obstacle::texObs(float x, float y, int n, float _len, float angle)
         centerY /= ObsVertex[n].size();
         for (int i = ObsVertex[n].size() - 1; i >= 0; i--)
         {
-            p.push_back(Point2f((ObsVertex[n][i].x - centerX) / len * 2 * _len + x, y + (ObsVertex[n][i].y - centerY) / len * 2 * _len));
+            p.push_back(Point2f((ObsVertex[n][i].x - centerX) / len * _len + x, y + (ObsVertex[n][i].y - centerY) / len * _len));
         }
     }
-    return Obstacle(p, n, ObsRatio[n].x, ObsRatio[n].y, angle);
+    return Obstacle(p, n, ObsRatio[n].x, ObsRatio[n].y, angle, _speed);
 }
 Obstacle Obstacle::rect(float x1, float x2, float y1, float y2)
 {
@@ -276,14 +279,24 @@ void Obstacle::draw()
 void createObs(int num)
 {
     int obstacleNum = 0;
+    bool noValid = true;
     for (int i = 3; i < obsNum; i++)
+        if (obstacles[i].valid)
+            noValid = false;
+    if (noValid)
+    // if (noValid && score > 1000)
+    {
+        obstacles[BOSS_MONITOR] = Obstacle::texObs(width / 2 + (rand() % 200), height - 100, 3, 512, 0, 0.2f);
+        obstacles[BOSS_MONITOR].life = 2000;
+    }
+    for (int i = 10; i < obsNum; i++)
     {
         if (obstacles[i].valid == false)
         {
-            obstacles[i] = Obstacle::texObs(rand() % 1000 + width / 2 - 500, rand() % 100 + height - 200, rand() % ObsVertex.size(), 50, rand() % 360);
+            obstacles[i] = Obstacle::texObs(rand() % 1000 + width / 2 - 500, rand() % 100 + height - 200, rand() % ObsNum, 100, rand() % 360, (rand() % 1000 + 1000) / 2000.0f);
             obstacles[i].life = rand() % maxLife;
             obstacleNum++;
-            if (obstacleNum > num)
+            if (obstacleNum >= num)
                 break;
         }
     }

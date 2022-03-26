@@ -12,6 +12,8 @@
 #define EMIT_MODE_SABER 4
 #define EMIT_MODE_SPEAR 5
 
+#define BOSS_MONITOR 3
+
 class Game
 {
 public:

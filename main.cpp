@@ -17,6 +17,7 @@ bool finish = false;
 unsigned int ObsTex[10];
 vector<vector<Point>> ObsVertex;
 vector<Point2f> ObsRatio;
+int ObsNum = 3;
 
 unsigned int ballTex[10];
 vector<vector<Point>> ballVertex;
@@ -217,7 +218,7 @@ void loadTex(void)
     //     sprintf(tmp, "witch%d.png", i);
     //     texNames.push_back(tmp);
     // }
-    texNames = vector<string>({"img/witch1.png", "img/witch2.png", "img/witch3.png"});
+    texNames = vector<string>({"img/witch1.png", "img/witch2.png", "img/witch3.png", "img/monitor.png"});
     loadTex(texNames, ObsVertex, ObsRatio, ObsTex);
     texNames = vector<string>({"img/qb.png", "img/bomb.png", "img/mami.png", "img/madoka.png", "img/saber.png", "img/spear.png"});
     loadTex(texNames, ballVertex, ballRatio, ballTex);

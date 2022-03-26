@@ -143,6 +143,12 @@ void Bullet::move()
                         }
                         Anim::addAnim({1.0f}, {Point2f(obstacles[i].centerX, obstacles[i].centerY), Point2f(obstacles[i].centerX, obstacles[i].centerY)}, {Point3f(1.0f, 1.0f, 1.0f), Point3f(1.0f, 1.0f, 1.0f)}, {1.0f, 0.0f}, {1}, animTex, {Point2f(512.0f, 512.0f), Point2f(512.0f, 512.0f)}, {0.0f, 0.0f});
                     }
+                    if (i == BOSS_MONITOR)
+                    {
+                        if (Bullet::bulletExplode[type] > 1.0f)
+                            obstacles[i].attack(10000, Bullet::bulletAccum[type]);
+                        valid = false;
+                    }
                 }
             }
         }

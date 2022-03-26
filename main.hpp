@@ -15,6 +15,7 @@ extern bool finish;
 extern unsigned int ObsTex[];
 extern vector<vector<Point>> ObsVertex;
 extern vector<Point2f> ObsRatio;
+extern int ObsNum;
 
 extern unsigned int ballTex[];
 extern vector<vector<Point>> ballVertex;

@@ -13,7 +13,7 @@ void initGame(void)
     createObs(obsPerLayer);
     game.emit.emitState = EMIT_STATE_IDLE;
     Bullet::bulletNum = vector<int>({50, 0, 0, 0, 0, 0});
-    Bullet::bulletAtt = vector<int>({1, 100, 1, 1000, 1000, 0});
+    Bullet::bulletAtt = vector<int>({1, 100, 2, 200, 200, 0});
     Bullet::bulletPrice = vector<int>({0, 1000, 5, 1000, 1000, 1000});
     Bullet::bulletLimited = vector<bool>({false, true, false, true, true, true});
     Bullet::bulletReDir = vector<bool>({false, false, true, false, false, false});
@@ -63,8 +63,8 @@ void *calc(void *arg)
                         if (obstacles[i].valid && !obstacles[i].fixed)
                         {
                             for (int j = 0; j < obstacles[i].points.size(); j++)
-                                obstacles[i].points[j].y -= 1;
-                            obstacles[i].centerY -= 1;
+                                obstacles[i].points[j].y -= obstacles[i].speed;
+                            obstacles[i].centerY -= obstacles[i].speed;
                             if (obstacles[i].centerY < 0.0f)
                                 initGame();
                         }
@@ -168,6 +168,7 @@ void *calc(void *arg)
                                 obstacles[j].attack(exp, Bullet::bulletAccum[game.emit.emitMode]);
                             }
                         }
+                        game.emitWait = 19;
                     }
                 }
 
@@ -207,7 +208,7 @@ void *calc(void *arg)
         {
             for (int i = 0; i < obsNum; i++)
             {
-                if (obstacles[i].valid && !obstacles[i].fixed)
+                if (obstacles[i].valid && !obstacles[i].fixed && i != BOSS_MONITOR)
                 {
                     obstacles[i].phase++;
                     if (obstacles[i].phase >= obstacles[i].period)
