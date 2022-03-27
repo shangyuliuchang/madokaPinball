@@ -316,8 +316,8 @@ void createObs(int num)
         {
             if (obstacles[i].valid == false)
             {
-                obstacles[i] = Obstacle::texObs(rand() % 100 + obstacles[BOSS_BUTAI].centerX / 2 - 50, rand() % 100 + obstacles[BOSS_BUTAI].centerY - 50, rand() % ObsNum, 100, rand() % 360, (rand() % 1000 + 3000) / 2000.0f);
-                obstacles[i].life = rand() % 10;
+                obstacles[i] = Obstacle::texObs(rand() % 100 + obstacles[BOSS_BUTAI].centerX - 50, rand() % 100 + obstacles[BOSS_BUTAI].centerY - 50, 5, 100, rand() % 360, (rand() % 1000 + 3000) / -10000.0f);
+                obstacles[i].life = rand() % 100;
                 obstacleNum++;
                 if (obstacleNum >= 1)
                     break;

@@ -152,7 +152,7 @@ void Bullet::move()
                     if (i == BOSS_BUTAI)
                     {
                         if (type == EMIT_MODE_ARROW)
-                            obstacles[i].attack(10000, Bullet::bulletAccum[type]);
+                            obstacles[i].attack(800, Bullet::bulletAccum[type]);
                         valid = false;
                     }
                 }

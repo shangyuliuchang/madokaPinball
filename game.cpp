@@ -3,9 +3,13 @@
 Game game;
 void initGame(void)
 {
+#ifdef DEBUG
+    game.accum = maxAccum;
+    score = 2000;
+#else
     score = 0;
     game.accum = 0;
-    // game.accum = maxAccum;
+#endif
     game.raise = 0;
     game.emitWait = 0;
     for (int i = 0; i < ballNum; i++)
@@ -28,7 +32,11 @@ void initGame(void)
     game.emit.emitMode = EMIT_MODE_QB;
     game.emit.emitState = EMIT_STATE_IDLE;
     game.emit.emitCnt = 0;
+#ifdef DEBUG
+    game.state = DURING_BOSS_MONITOR;
+#else
     game.state = BEFORE_BOSS_MONITOR;
+#endif
 }
 void *calc(void *arg)
 {
@@ -62,7 +70,7 @@ void *calc(void *arg)
                 {
                     game.raise++;
                     for (int i = 0; i < obsNum; i++)
-                        if (obstacles[i].valid && !obstacles[i].fixed)
+                        if (obstacles[i].valid && !obstacles[i].fixed && obstacles[i].speed > 0.0f)
                         {
                             for (int j = 0; j < obstacles[i].points.size(); j++)
                                 obstacles[i].points[j].y -= obstacles[i].speed;
@@ -221,16 +229,27 @@ void *calc(void *arg)
                     }
                 }
             }
+            for (int i = 1; i < obsNum; i++)
+            {
+                if (obstacles[i].valid && obstacles[i].fixed == false && obstacles[i].speed < 0.0f)
+                {
+                    for (int j = 0; j < obstacles[i].points.size(); j++)
+                        obstacles[i].points[j].y += obstacles[i].speed;
+                    obstacles[i].centerY += obstacles[i].speed;
+                    if (obstacles[i].centerY < 0.0f)
+                        initGame();
+                }
+            }
         }
         if (game.state == DURING_BOSS_MONITOR && obstacles[BOSS_MONITOR].valid == false)
         {
             game.state = AFTER_BOSS_MONITOR;
-            Bullet::bulletNum[0] = 100;
+            Bullet::bulletAtt[0] = 2;
         }
         if (game.state == DURING_BOSS_BUTAI && obstacles[BOSS_BUTAI].valid == false)
         {
             game.state = AFTER_BOSS_BUTAI;
-            Bullet::bulletNum[0] = 150;
+            Bullet::bulletAtt[0] = 3;
         }
         Sleep(1);
     }

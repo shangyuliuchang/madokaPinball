@@ -21,6 +21,8 @@
 #define DURING_BOSS_BUTAI 3
 #define AFTER_BOSS_BUTAI 4
 
+// #define DEBUG 1
+
 class Game
 {
 public:
